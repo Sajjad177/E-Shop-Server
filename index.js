@@ -20,16 +20,46 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    const productsCollection = client.db("e-shop").collection("products");
+
+    app.get("/products", async (req, res) => {
+      const {
+        page = 1,
+        limit = 6,
+        search = "",
+        sort = "",
+        category = "",
+        price = "",
+      } = req.query;
+
+      const skip = (page - 1) * limit;
+      const query = {};
+      if (search) query.productName = { $regex: search, $options: "i" };
+      if (category) query.category = category;
+      if (price) {
+        const [min, max] = price.split("-");
+        query.price = { $gte: parseInt(min), $lte: parseInt(max) };
+      }
+      const sortOptions = {};
+      if (sort === "price_asc") sortOptions.price = 1;
+      if (sort === "price_desc") sortOptions.price = -1;
+      if (sort === "date_desc") sortOptions.createdAt = -1;
+      const total = await productsCollection.countDocuments(query);
+      const products = await productsCollection
+        .find(query)
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(parseInt(limit))
+        .toArray();
+
+      res.send({ products, total });
+    });
+
+    // await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
   } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
   }
 }
 run().catch(console.dir);
