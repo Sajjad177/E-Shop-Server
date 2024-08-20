@@ -5,7 +5,13 @@ const port = process.env.PORT || 3000;
 require("dotenv").config();
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
-app.use(express.json());
+const corsOptions = {
+  origin: ["http://localhost:5173", "http://localhost:5174"],
+  credentials: true,
+  optionSuccessStatus: 200,
+};
+
+app.use(express.json(corsOptions));
 app.use(cors());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.duidxgw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -17,9 +23,6 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   },
 });
-
-
-
 
 async function run() {
   try {
