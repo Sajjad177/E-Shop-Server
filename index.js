@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cors());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.duidxgw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -17,6 +17,9 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   },
 });
+
+
+
 
 async function run() {
   try {
@@ -34,11 +37,11 @@ async function run() {
 
       const skip = (page - 1) * limit;
       const query = {};
-      if (search) query.productName = { $regex: search, $options: "i" };
+      if (search) query.product_name = { $regex: search, $options: "i" };
       if (category) query.category = category;
       if (price) {
         const [min, max] = price.split("-");
-        query.price = { $gte: parseInt(min), $lte: parseInt(max) };
+        query.price = { $gte: parseFloat(min), $lte: parseFloat(max) };
       }
       const sortOptions = {};
       if (sort === "price_asc") sortOptions.price = 1;
@@ -55,7 +58,6 @@ async function run() {
       res.send({ products, total });
     });
 
-    // await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
