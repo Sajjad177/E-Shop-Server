@@ -36,7 +36,7 @@
    - Configure environment variables by creating a `.env` file in the root directory. Add the following variables:
      ```plaintext
      PORT=3000
-     MONGODB_URI=mongodb://localhost:27017/products
+     MONGODB_URI=mongodb://localhost:3000/products
 4. **Access the server:**
    - Run the server using:
      ```bash
