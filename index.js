@@ -47,7 +47,7 @@ async function run() {
       
       if (price) {
         const [min, max] = price.split("-");
-        query.price = { $gte: parseFloat(min), $lte: parseFloat(max) };
+        query.price = { $gte: parseInt(min), $lte: parseInt(max) };
       }
       const sortOptions = {};
       if (sort === "price_asc") sortOptions.price = 1;
