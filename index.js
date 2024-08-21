@@ -40,8 +40,11 @@ async function run() {
 
       const skip = (page - 1) * limit;
       const query = {};
+
       if (search) query.product_name = { $regex: search, $options: "i" };
+
       if (category) query.category = category;
+      
       if (price) {
         const [min, max] = price.split("-");
         query.price = { $gte: parseFloat(min), $lte: parseFloat(max) };
@@ -70,7 +73,7 @@ async function run() {
 run().catch(console.dir);
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Hello World! This is E-Shop server");
 });
 
 app.listen(port, () => {
