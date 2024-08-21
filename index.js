@@ -6,7 +6,12 @@ require("dotenv").config();
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "http://localhost:5174"],
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "https://job-task-b1cd7.web.app",
+    "https://job-task-b1cd7.firebaseapp.com",
+  ],
   credentials: true,
   optionSuccessStatus: 200,
 };
